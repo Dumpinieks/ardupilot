@@ -167,7 +167,8 @@ private:
     // C2 camera commands
     enum class CameraCommand2 : uint8_t {
         SET_EO_ZOOM = 0x53,
-        DZOOM_ON = 0x06
+        DZOOM_ON = 0x06,
+        MAX_ZOOM_LEVEL = 0x08
     };
 
     // D1 recording status (received from gimbal)
