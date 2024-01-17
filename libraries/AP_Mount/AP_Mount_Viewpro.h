@@ -130,6 +130,13 @@ private:
         FOLLOW_YAW_DISABLE = 0x0A,
     };
 
+    // A2 servo status enum
+    enum class ServoAction : uint8_t {
+        NO_ACTION = 0x00,
+        MANUAL_ERROR_CORRECT_OF_PITCH_ANGLE = 0x01,
+        MANUAL_ERROR_CORRECT_OF_YAW_ANGLE = 0x02
+    };
+
     // C1 image sensor choice
     enum class ImageSensor : uint8_t {
         NO_ACTION = 0x00,   // no image sensor is affected
@@ -159,7 +166,8 @@ private:
 
     // C2 camera commands
     enum class CameraCommand2 : uint8_t {
-        SET_EO_ZOOM = 0x53
+        SET_EO_ZOOM = 0x53,
+        DZOOM_ON = 0x06
     };
 
     // D1 recording status (received from gimbal)
@@ -239,6 +247,17 @@ private:
             be16_t yaw_be;              // target yaw angle or rate msb
             be16_t pitch_be;            // target pitch angle or rate msb
             uint8_t unused[4];          // unused
+        } content;
+        uint8_t bytes[sizeof(content)];
+    };
+
+    // A1 used to send target angles and rates
+    union A2Packet {
+        struct {
+            ServoAction servo_action : 5;
+            bool feedback_infrequently_used_frames : 1;
+            uint8_t frame_counter : 2;
+            uint8_t adjustment_byte;
         } content;
         uint8_t bytes[sizeof(content)];
     };
