@@ -39,8 +39,6 @@ void AP_Mount_Viewpro::init()
     }
 
     AP_Mount_Backend::init();
-    send_camera_command2(CameraCommand2::DZOOM_ON, 0);
-    send_camera_command2(CameraCommand2::MAX_ZOOM_LEVEL, 0x0140);
 }
 
 // update mount position - should be called periodically
@@ -80,6 +78,13 @@ void AP_Mount_Viewpro::update()
 
     // change to RC_TARGETING mode if RC input has changed
     set_rctargeting_on_rcinput_change();
+
+    if (!_turned_on_zoom)
+    {
+        _turned_on_zoom = true;
+        send_camera_command2(CameraCommand2::DZOOM_ON, 0);
+        send_camera_command2(CameraCommand2::MAX_ZOOM_LEVEL, 0x0140);
+    }
 
     // if tracking is active we do not send new targets to the gimbal
     if (_last_tracking_status == TrackingStatus::SEARCHING || _last_tracking_status == TrackingStatus::TRACKING) {
